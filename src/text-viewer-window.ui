@@ -27,21 +27,34 @@
                 <property name="menu-model">primary_menu</property>
               </object>
             </child>
+            <child type="end">
+              <object class="GtkLabel" id="cursor_pos">
+                <property name="label">Ln 0, Col 0</property>
+                <style>
+                  <class name="dim-label" />
+                  <class name="numeric" />
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <property name="content">
-          <object class="GtkScrolledWindow">
-            <property name="hexpand">true</property>
-            <property name="vexpand">true</property>
-            <property name="margin-top">6</property>
-            <property name="margin-bottom">6</property>
-            <property name="margin-start">6</property>
+          <object class="AdwToastOverlay" id="toast_overlay">
             <property name="child">
-              <object class="GtkTextView" id="main_text_view">
-                <property name="monospace">true</property>
+              <object class="GtkScrolledWindow">
+                <property name="hexpand">true</property>
+                <property name="vexpand">true</property>
+                <property name="margin-top">6</property>
+                <property name="margin-bottom">6</property>
+                <property name="margin-start">6</property>
+                <property name="child">
+                  <object class="GtkTextView" id="main_text_view">
+                    <property name="monospace">true</property>
+                  </object>
+                </property>
+                <property name="margin-end">6</property>
               </object>
             </property>
-            <property name="margin-end">6</property>
           </object>
         </property>
       </object>
@@ -50,8 +63,12 @@
   <menu id="primary_menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Preferences</attribute>
-        <attribute name="action">app.preferences</attribute>
+        <attribute name="label" translatable="yes">_Save as...</attribute>
+        <attribute name="action">win.save-as</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Dark mode</attribute>
+        <attribute name="action">app.dark-mode</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>

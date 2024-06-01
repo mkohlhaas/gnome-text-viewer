@@ -1,3 +1,3 @@
-# text-viewer
+# gnome-text-viewer
 
-A description of this project.
+[Getting Started Tutorial](https://developer.gnome.org/documentation/tutorials/beginners/getting_started.html)

@@ -15,5 +15,5 @@ executable(
   'text-viewer',
   text_viewer_sources,
   dependencies: text_viewer_deps,
-  install: false,
+  install: true,
 )

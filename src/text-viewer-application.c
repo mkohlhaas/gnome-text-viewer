@@ -95,9 +95,49 @@ static const GActionEntry app_actions[] = {
 };
 
 static void
+toggle_dark_mode (GSimpleAction *action, GVariant *parameter G_GNUC_UNUSED, gpointer user_data G_GNUC_UNUSED)
+{
+  GVariant *state     = g_action_get_state (G_ACTION (action));
+  gboolean  old_state = g_variant_get_boolean (state);
+  gboolean  new_state = !old_state;
+
+  g_action_change_state (G_ACTION (action), g_variant_new_boolean (new_state));
+
+  g_variant_unref (state);
+}
+
+static void
+change_color_scheme (GSimpleAction *action, GVariant *new_state, TextViewerApplication *self)
+{
+  gboolean dark_mode = g_variant_get_boolean (new_state);
+
+  AdwStyleManager *style_manager = adw_style_manager_get_default ();
+
+  if (dark_mode)
+    {
+      adw_style_manager_set_color_scheme (style_manager, ADW_COLOR_SCHEME_FORCE_DARK);
+    }
+  else
+    {
+      adw_style_manager_set_color_scheme (style_manager, ADW_COLOR_SCHEME_DEFAULT);
+    }
+
+  g_simple_action_set_state (action, new_state);
+}
+
+static void
 text_viewer_application_init (TextViewerApplication *self)
 {
   g_action_map_add_action_entries (G_ACTION_MAP (self), app_actions, G_N_ELEMENTS (app_actions), self);
-  gtk_application_set_accels_for_action (GTK_APPLICATION (self), "app.quit", (const char *[]){ "<primary>q", NULL });
-  gtk_application_set_accels_for_action (GTK_APPLICATION (self), "win.open", (const char *[]){ "<Ctrl>o", NULL });
+
+  GtkApplication *app = GTK_APPLICATION (self);
+  gtk_application_set_accels_for_action (app, "app.quit", (const char *[]){ "<primary>q", NULL });
+  gtk_application_set_accels_for_action (app, "win.open", (const char *[]){ "<Ctrl>o", NULL });
+  gtk_application_set_accels_for_action (app, "win.save-as", (const char *[]){ "<Ctrl><Shift>s", NULL });
+
+  g_autoptr (GSimpleAction) dark_action
+      = g_simple_action_new_stateful ("dark-mode", NULL, g_variant_new_boolean (FALSE));
+  g_signal_connect (dark_action, "activate", G_CALLBACK (toggle_dark_mode), self);
+  g_signal_connect (dark_action, "change-state", G_CALLBACK (change_color_scheme), self);
+  g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (dark_action));
 }
